@@ -3,6 +3,7 @@ import parseMD from 'parse-md';
 import * as markdown from 'markdown-wasm';
 
 const filenames = fs.readdirSync('./_posts');
+let postData = { data: [] }
 
 filenames.forEach(file => {
     let data;
@@ -13,6 +14,7 @@ filenames.forEach(file => {
     }
 
     const { metadata, content } = parseMD(data);
+    postData.data.push(metadata);
 
     const htmlContent = markdown.parse(content);
 
@@ -27,7 +29,24 @@ filenames.forEach(file => {
     fs.writeFile(`./posts/${metadata.title.replace(/\s+/g, '-').toLowerCase()}.html`,
         output, (err) => {
             if (err) {
-                console.error(err)
+                console.error(err);
             }
     });
+});
+
+let pdata = postData['data'];
+pdata.sort((a, b) => {
+    if (a.date < b.date) {
+        return 1;
+    } else if (a.date > b.date) {
+        return -1;
+    } else {
+        return 0;
+    }
+});
+postData.data = pdata;
+fs.writeFile('./postdata.json', JSON.stringify(postData), (err) => {
+    if (err) {
+        console.error(err);
+    }
 });
