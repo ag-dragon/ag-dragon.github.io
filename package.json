@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "dependencies": {
+    "markdown-wasm": "^1.2.0",
+    "parse-md": "^3.0.3"
+  }
+}
