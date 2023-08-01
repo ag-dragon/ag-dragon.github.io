@@ -1,4 +1,19 @@
-function add_articles(posts) {
+function articleSearch() {
+    input = document.getElementById('articleSearch');
+    search = input.value.toLowerCase();
+    pList = allPosts.filter((post) => {
+        console.log(post.tags.filter(str => str.includes(search)));
+        return post.title.toLowerCase().includes(search) ||
+            post.description.toLowerCase().includes(search) ||
+            post.tags.filter(str => str.includes(search)).length > 0;
+    });
+    page = 1;
+    pageMax = Math.ceil(pList.length / pageSize);
+    removeArticles();
+    addArticles(paginate(pList, page, pageSize));
+}
+
+function addArticles(posts) {
     posts.forEach(post => {
         const article = document.createElement('div');
         article.classList.toggle('article');
@@ -59,7 +74,7 @@ function selectTag(tag) {
     page = 1;
     pageMax = Math.ceil(pList.length / pageSize);
     removeArticles();
-    add_articles(paginate(pList, page, pageSize));
+    addArticles(paginate(pList, page, pageSize));
 }
 
 let allPosts;
@@ -72,7 +87,7 @@ prevBtn.addEventListener('click', () => {
     if (page > 1) {
         page -= 1;
         removeArticles();
-        add_articles(paginate(pList, page, pageSize));
+        addArticles(paginate(pList, page, pageSize));
     }
 });
 const nextBtn = document.querySelector('#next');
@@ -80,7 +95,7 @@ nextBtn.addEventListener('click', () => {
     if (page < pageMax) {
         page += 1;
         removeArticles();
-        add_articles(paginate(pList, page, pageSize));
+        addArticles(paginate(pList, page, pageSize));
     }
 });
 const postsBtn = document.querySelector('#postsBtn');
@@ -89,7 +104,7 @@ postsBtn.addEventListener('click', () => {
     page = 1;
     pageMax = Math.ceil(pList.length / pageSize);
     removeArticles();
-    add_articles(paginate(pList, page, pageSize));
+    addArticles(paginate(pList, page, pageSize));
 });
 
 const container = document.querySelector('.articles');
@@ -99,7 +114,7 @@ fetch('https://ag-dragon.github.io/postdata.json')
         allPosts = data.data;
         pList = allPosts;
         pageMax = Math.ceil(pList.length / pageSize);
-        add_articles(pList);
+        addArticles(pList);
     })
     .catch((err) => {
         console.error(err);
