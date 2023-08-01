@@ -130,7 +130,7 @@ fetch('https://ag-dragon.github.io/postdata.json')
         allPosts = data.data;
         pList = allPosts;
         pageMax = Math.ceil(pList.length / pageSize);
-        addArticles(pList);
+        addArticles(paginate(pList, page, pageSize));
     })
     .catch((err) => {
         console.error(err);
