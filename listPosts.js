@@ -14,8 +14,14 @@ function articleSearch() {
 }
 
 function addArticles(posts) {
-    const pageCount = document.getElementById('pageCount');
-    pageCount.textContent = `${page} of ${pageMax}`;
+    const pageNav = document.querySelector('.button-container');
+    if (pageMax <= 1) {
+        pageNav.style.display = 'none';
+    } else {
+        const pageCount = document.getElementById('pageCount');
+        pageCount.textContent = `${page} of ${pageMax}`;
+        pageNav.style.display = 'flex';
+    }
     posts.forEach(post => {
         const article = document.createElement('div');
         article.classList.toggle('article');
