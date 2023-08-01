@@ -67,11 +67,15 @@ function paginate(data, page, pageSize) {
 }
 
 function selectTag(tag) {
+    const postTitle = document.querySelector('.search div');
+    postTitle.textContent = `${tag}`;
     pList = allPosts.filter((post) => {
         return post.tags.includes(tag);
     });
     page = 1;
     pageMax = Math.ceil(pList.length / pageSize);
+    prevBtn.disabled = true;
+    nextBtn.disabled = !(pageMax > 1);
     removeArticles();
     addArticles(paginate(pList, page, pageSize));
 }
@@ -111,6 +115,10 @@ postsBtn.addEventListener('click', () => {
     pList = allPosts;
     page = 1;
     pageMax = Math.ceil(pList.length / pageSize);
+    prevBtn.disabled = true;
+    nextBtn.disabled = false;
+    const postTitle = document.querySelector('.search div');
+    postTitle.textContent = 'Posts';
     removeArticles();
     addArticles(paginate(pList, page, pageSize));
 });
