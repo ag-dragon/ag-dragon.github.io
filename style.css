@@ -19,11 +19,17 @@ ul {
 
 a {
     text-decoration: none;
-    color: #ffffff;
+    color: rgb(6, 182, 212);
 }
 
-p {
-    font-size: 0.9rem;
+h1 {
+    font-size: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.email {
+    color: rgb(6, 182, 212);
 }
 
 .header {
@@ -43,11 +49,16 @@ p {
     font-weight: 400;
 }
 
+.header a {
+    color: #ffffff;
+}
+
 .divider {
     border-top-style: solid;
     border-width: 2px;
     border-color: rgba(255, 255, 255, 0.15);
     margin: 16px 0;
+    margin-bottom: 32px;
 }
 
 .articles {
@@ -60,6 +71,10 @@ p {
 .article {
     display: flex;
     flex-direction: column;
+}
+
+.article a {
+    color: #fff;
 }
 
 .article .desc {
