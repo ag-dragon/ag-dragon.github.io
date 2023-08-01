@@ -24,18 +24,23 @@ function add_articles(posts) {
                 const tagList = document.createElement('ul');
                     post.tags.forEach(tag => {
                         const tagli = document.createElement('li');
-                        tagli.textContent = tag;
+                        const tagButton = document.createElement('button');
+                        tagButton.textContent = tag;
+                        tagButton.classList.toggle('tag');
+                        tagButton.addEventListener('click', () => {
+                            selectTag(tag);
+                        });
+                        tagli.appendChild(tagButton);
                         tagList.appendChild(tagli);
                     });
                 postInfo.appendChild(tagList);
             article.appendChild(postInfo);
 
         container.appendChild(article);
-                    console.log(post);
                 });
 }
 
-function remove_articles() {
+function removeArticles() {
     const articles = document.querySelector('.articles');
     articles.innerHTML = '';
 }
@@ -47,6 +52,17 @@ function paginate(data, page, pageSize) {
     );
 }
 
+function selectTag(tag) {
+    pList = allPosts.filter((post) => {
+        return post.tags.includes(tag);
+    });
+    page = 1;
+    pageMax = Math.ceil(pList.length / pageSize);
+    removeArticles();
+    add_articles(paginate(pList, page, pageSize));
+}
+
+let allPosts;
 let pList;
 let page = 1;
 const pageSize = 10;
@@ -55,7 +71,7 @@ const prevBtn = document.querySelector('#previous');
 prevBtn.addEventListener('click', () => {
     if (page > 1) {
         page -= 1;
-        remove_articles();
+        removeArticles();
         add_articles(paginate(pList, page, pageSize));
     }
 });
@@ -63,16 +79,25 @@ const nextBtn = document.querySelector('#next');
 nextBtn.addEventListener('click', () => {
     if (page < pageMax) {
         page += 1;
-        remove_articles();
+        removeArticles();
         add_articles(paginate(pList, page, pageSize));
     }
+});
+const postsBtn = document.querySelector('#postsBtn');
+postsBtn.addEventListener('click', () => {
+    pList = allPosts;
+    page = 1;
+    pageMax = Math.ceil(pList.length / pageSize);
+    removeArticles();
+    add_articles(paginate(pList, page, pageSize));
 });
 
 const container = document.querySelector('.articles');
 fetch('https://ag-dragon.github.io/postdata.json')
     .then((res) => res.json())
     .then((data) => {
-        pList = data.data;
+        allPosts = data.data;
+        pList = allPosts;
         pageMax = Math.ceil(pList.length / pageSize);
         add_articles(pList);
     })
