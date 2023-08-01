@@ -54,6 +54,7 @@ p {
     display: flex;
     flex-direction: column;
     gap: 24px;
+    margin-bottom: 16px;
 }
 
 .article {
@@ -108,4 +109,24 @@ p {
 
 .search input:focus {
     border: 1px solid rgb(6, 182, 212);
+}
+
+.button-container {
+    display: flex;
+    gap: 8px;
+}
+
+.button-container button {
+    background: none!important;
+    border: none;
+    color: hsl(0, 0%, 85%);
+    font-weight: 500;
+    font-size: 0.8rem;
+    padding: 0!important;
+    cursor: pointer;
+}
+
+.button-container button:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
