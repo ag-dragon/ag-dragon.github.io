@@ -158,6 +158,11 @@ h1 {
     gap: 8px;
 }
 
+.project-preview img {
+    width: 25vw;
+    height: auto;
+}
+
 .project-title {
     font-weight: 600;
 }
