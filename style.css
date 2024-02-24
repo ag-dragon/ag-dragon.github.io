@@ -166,3 +166,9 @@ h1 {
 .project-title {
     font-weight: 600;
 }
+
+.project-tags {
+    display: flex;
+    gap: 10px;
+    opacity: 80%;
+    font-size: 90%;
