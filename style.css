@@ -173,3 +173,9 @@ h1 {
     gap: 10px;
     opacity: 80%;
     font-size: 90%;
+}
+
+#mazeCanvas {
+    width: 100%;
+    height: auto;
+}
