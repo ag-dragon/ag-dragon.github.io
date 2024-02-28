@@ -1,9 +1,14 @@
 const canvas = document.getElementById("mazeCanvas");
-const cellSize = 4;
-const cellSpacing = 4;
-const cellWidth = (canvas.width - cellSpacing) / (cellSize + cellSpacing);
-const cellHeight = (canvas.height - cellSpacing) / (cellSize + cellSpacing);
+const cellSizeInput = document.getElementById("sizeInput");
+const cellsPerDelayInput = document.getElementById("cellsPerDelayInput");
+const delayInput = document.getElementById("delayInput");
+var cellSize = 4;
+var cellSpacing = 4;
+var cellWidth = (canvas.width - cellSpacing) / (cellSize + cellSpacing);
+var cellHeight = (canvas.height - cellSpacing) / (cellSize + cellSpacing);
 var restart = true;
+var delay = parseInt(delayInput.value);
+var cellsPerDelay = parseInt(cellsPerDelayInput.value);
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -101,8 +106,8 @@ async function genDepth() {
             }
         }
         sleepCounter++;
-        if (sleepCounter >= 5) {
-            await sleep(1);
+        if (sleepCounter >= cellsPerDelay) {
+            await sleep(delay);
             sleepCounter = 0;
         }
         draw(maze);
@@ -112,13 +117,19 @@ async function genDepth() {
 async function generateMaze() {
     while (true) {
         if (restart) {
+            cellSize = parseInt(cellSizeInput.value);
+            cellSpacing = cellSize;
+            cellWidth = (canvas.width - cellSpacing) / (cellSize + cellSpacing);
+            cellHeight = (canvas.height - cellSpacing) / (cellSize + cellSpacing);
             restart = false;
+            cellsPerDelay = parseInt(cellsPerDelayInput.value);
+            delay = parseInt(delayInput.value);
             await genDepth();
         }
         await sleep(1);
     }
 }
 
-const button = document.getElementById("mazeControls");
+const button = document.getElementById("generateButton");
 window.addEventListener("load", generateMaze);
 button.onclick = function(){restart = true;};
