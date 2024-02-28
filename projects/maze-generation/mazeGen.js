@@ -19,19 +19,27 @@ function draw(maze) {
     for (let y = 0; y < maze.length; y++) {
         var row = maze[y];
         for (x = 0; x < row.length; x++) {
+            if (row[x][1] > 0) {
+                ctx.fillStyle = `hsl(
+                    ${Math.floor(row[x][1]/5 % 300)}
+                    100%
+                    70%)`;
+                ctx.fillRect((x * (cellSize + cellSpacing)) + cellSpacing, (y * (cellSize + cellSpacing)) + cellSpacing, cellSize, cellSize);
+            }
             if (row[x][0] & 1 == 1) {
                 ctx.fillRect((x * (cellSize + cellSpacing)) + cellSpacing*2, (y * (cellSize + cellSpacing)) + cellSpacing, cellSize, cellSize);
             }
             if ((row[x][0] >> 1) & 1 == 1) {
                 ctx.fillRect((x * (cellSize + cellSpacing)) + cellSpacing, (y * (cellSize + cellSpacing)) + cellSpacing*2, cellSize, cellSize);
             }
-            if (row[x][1] > 0) {
-                ctx.fillRect((x * (cellSize + cellSpacing)) + cellSpacing, (y * (cellSize + cellSpacing)) + cellSpacing, cellSize, cellSize);
-            }
         }
     }
 }
 
+// the maze is a 2d array of cells, each cell is a an array consisting of:
+// - walls: first bit = east wall, second bit = south wall
+// - depth: an integer reperesenting the depth of the cell
+//   0 means the cell is not active and should not be drawn
 function initMaze() {
     var maze = [];
     for (let y = 0; y < cellHeight; y++) {
@@ -55,6 +63,7 @@ async function genDepth() {
         var cell = cellStack.pop();
         var cX = cell[0];
         var cY = cell[1];
+        var depth = maze[cY][cX][1];
         var borders = [];
         if (cX > 0 && maze[cY][cX-1][1] == 0) {
             // left
@@ -71,24 +80,21 @@ async function genDepth() {
         }
         if (borders.length > 0) {
             var dir = Math.floor(Math.random() * borders.length);
+            cellStack.push(cell);
             if (borders[dir] == 0) {
-                cellStack.push(cell);
-                maze[cY][cX-1][1] = 1;
+                maze[cY][cX-1][1] = depth+1;
                 maze[cY][cX-1][0] |= 1;
                 cellStack.push([cX-1, cY]);
             } else if (borders[dir] == 1) {
-                cellStack.push(cell);
-                maze[cY][cX+1][1] = 1;
+                maze[cY][cX+1][1] = depth+1;
                 maze[cY][cX][0] |= 1;
                 cellStack.push([cX+1, cY]);
             } else if (borders[dir] == 2) {
-                cellStack.push(cell);
-                maze[cY-1][cX][1] = 1;
+                maze[cY-1][cX][1] = depth+1;
                 maze[cY-1][cX][0] |= 2;
                 cellStack.push([cX, cY-1]);
             } else if (borders[dir] == 3) {
-                cellStack.push(cell);
-                maze[cY+1][cX][1] = 1;
+                maze[cY+1][cX][1] = depth+1;
                 maze[cY][cX][0] |= 2;
                 cellStack.push([cX, cY+1]);
             }
