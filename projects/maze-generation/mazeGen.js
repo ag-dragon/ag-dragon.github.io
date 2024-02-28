@@ -3,6 +3,7 @@ const cellSize = 4;
 const cellSpacing = 4;
 const cellWidth = (canvas.width - cellSpacing) / (cellSize + cellSpacing);
 const cellHeight = (canvas.height - cellSpacing) / (cellSize + cellSpacing);
+var restart = true;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -59,7 +60,7 @@ async function genDepth() {
     cellStack.push([0, 0])
     draw(maze);
     var sleepCounter = 0;
-    while (cellStack.length > 0) {
+    while (cellStack.length > 0 && !restart) {
         var cell = cellStack.pop();
         var cX = cell[0];
         var cY = cell[1];
@@ -108,4 +109,16 @@ async function genDepth() {
     }
 }
 
-window.addEventListener("load", genDepth);
+async function generateMaze() {
+    while (true) {
+        if (restart) {
+            restart = false;
+            await genDepth();
+        }
+        await sleep(1);
+    }
+}
+
+const button = document.getElementById("mazeControls");
+window.addEventListener("load", generateMaze);
+button.onclick = function(){restart = true;};
