@@ -25,6 +25,10 @@
             </canvas>
             <div id="mazeControls">
                 <button id="generateButton">Generate</button>
+                <select id="algorithmSelect">
+                    <option value="depthFirst" selected="selected">Depth-First</option>
+                    <option value="prim">Prim's Algorithm</option>
+                </select>
                 <input id="sizeInput" type="number" min="1" max="20" value="4" />
                 <input id="cellsPerDelayInput" type="number" min="1" max="50" value="5" />
                 <input id="delayInput" type="number" min="1" max="20" value="1" />

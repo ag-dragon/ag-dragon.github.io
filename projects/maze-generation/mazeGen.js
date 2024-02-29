@@ -1,4 +1,5 @@
 const canvas = document.getElementById("mazeCanvas");
+const algorithmSelect = document.getElementById("algorithmSelect");
 const cellSizeInput = document.getElementById("sizeInput");
 const cellsPerDelayInput = document.getElementById("cellsPerDelayInput");
 const delayInput = document.getElementById("delayInput");
@@ -58,7 +59,7 @@ function initMaze() {
     return maze;
 }
 
-async function genDepth() {
+async function depthFirst() {
     var maze = initMaze();
     var cellStack = [];
     maze[0][0][1] = 1;
@@ -114,6 +115,62 @@ async function genDepth() {
     }
 }
 
+async function prim() {
+    var maze = initMaze();
+    var cellStack = [];
+    maze[0][0][1] = 1;
+    cellStack.push([0, 0])
+    draw(maze);
+    var sleepCounter = 0;
+    while (cellStack.length > 0 && !restart) {
+        var cell = cellStack.pop();
+        var cX = cell[0];
+        var cY = cell[1];
+        var depth = maze[cY][cX][1] + 40;
+        var borders = [];
+        if (cX > 0 && maze[cY][cX-1][1] == 0) {
+            // left
+            borders.push(0);
+        } if (cX < cellWidth-1 && maze[cY][cX+1][1] == 0) {
+            // right
+            borders.push(1);
+        } if (cY > 0 && maze[cY-1][cX][1] == 0) {
+            // up
+            borders.push(2);
+        }if (cY < cellHeight-1 && maze[cY+1][cX][1] == 0) {
+            // down
+            borders.push(3);
+        }
+        if (borders.length > 0) {
+            var dir = Math.floor(Math.random() * borders.length);
+            cellStack.push(cell);
+            if (borders[dir] == 0) {
+                maze[cY][cX-1][1] = depth+1;
+                maze[cY][cX-1][0] |= 1;
+                cellStack.push([cX-1, cY]);
+            } else if (borders[dir] == 1) {
+                maze[cY][cX+1][1] = depth+1;
+                maze[cY][cX][0] |= 1;
+                cellStack.push([cX+1, cY]);
+            } else if (borders[dir] == 2) {
+                maze[cY-1][cX][1] = depth+1;
+                maze[cY-1][cX][0] |= 2;
+                cellStack.push([cX, cY-1]);
+            } else if (borders[dir] == 3) {
+                maze[cY+1][cX][1] = depth+1;
+                maze[cY][cX][0] |= 2;
+                cellStack.push([cX, cY+1]);
+            }
+        }
+        sleepCounter++;
+        if (sleepCounter >= cellsPerDelay) {
+            await sleep(delay);
+            sleepCounter = 0;
+        }
+        draw(maze);
+    }
+}
+
 async function generateMaze() {
     while (true) {
         if (restart) {
@@ -124,7 +181,11 @@ async function generateMaze() {
             restart = false;
             cellsPerDelay = parseInt(cellsPerDelayInput.value);
             delay = parseInt(delayInput.value);
-            await genDepth();
+            if (algorithmSelect.value == "depthFirst") {
+                await depthFirst();
+            } else if (algorithmSelect.value == "prim") {
+                await prim();
+            }
         }
         await sleep(1);
     }
