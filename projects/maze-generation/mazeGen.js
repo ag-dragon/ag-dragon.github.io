@@ -119,47 +119,80 @@ async function prim() {
     var maze = initMaze();
     var cellStack = [];
     maze[0][0][1] = 1;
-    cellStack.push([0, 0])
+    cellStack.push("0,1");
+    cellStack.push("1,0");
     draw(maze);
     var sleepCounter = 0;
     while (cellStack.length > 0 && !restart) {
-        var cell = cellStack.pop();
-        var cX = cell[0];
-        var cY = cell[1];
-        var depth = maze[cY][cX][1] + 40;
+        var random_index = Math.floor(Math.random() * cellStack.length);
+        var new_cell = cellStack.splice(random_index, 1)[0].split(',');
+        var cX = parseInt(new_cell[0]);
+        var cY = parseInt(new_cell[1]);
+        /*
+        if (new_cell[2] == 0) {
+            old_cell = maze[cY-1][cX];
+            maze[cY-1][cX][0] |= 2;
+        } else if (new_cell[2] == 1) {
+            old_cell = maze[cY][cX+1];
+        } else if (new_cell[2] == 2) {
+            old_cell = maze[cY+1][cX];
+        } else if (new_cell[2] == 3) {
+            old_cell = maze[cY][cX-1];
+            maze[cY][cX-1][0] |= 1;
+        }
+        */
+        maze[cY][cX][1] = 1;
         var borders = [];
         if (cX > 0 && maze[cY][cX-1][1] == 0) {
             // left
+            var string = `${cX-1},${cY}`;
+            if (!cellStack.includes(string)) {
+                cellStack.push(string);
+            }
+        } else if (cX > 0) {
             borders.push(0);
-        } if (cX < cellWidth-1 && maze[cY][cX+1][1] == 0) {
+        }
+        if (cX < cellWidth-1 && maze[cY][cX+1][1] == 0) {
             // right
+            var string = `${cX+1},${cY}`;
+            if (!cellStack.includes(string)) {
+                cellStack.push(string);
+            }
+        } else if (cX < cellWidth-1) {
             borders.push(1);
-        } if (cY > 0 && maze[cY-1][cX][1] == 0) {
+        }
+        if (cY > 0 && maze[cY-1][cX][1] == 0) {
             // up
+            var string = `${cX},${cY-1}`;
+            if (!cellStack.includes(string)) {
+                cellStack.push(string);
+            }
+        } else if (cY > 0) {
             borders.push(2);
-        }if (cY < cellHeight-1 && maze[cY+1][cX][1] == 0) {
+        }
+        if (cY < cellHeight-1 && maze[cY+1][cX][1] == 0) {
             // down
+            var string = `${cX},${cY+1}`;
+            if (!cellStack.includes(string)) {
+                cellStack.push(string);
+            }
+        } else if (cY < cellHeight-1) {
             borders.push(3);
         }
         if (borders.length > 0) {
             var dir = Math.floor(Math.random() * borders.length);
-            cellStack.push(cell);
             if (borders[dir] == 0) {
-                maze[cY][cX-1][1] = depth+1;
                 maze[cY][cX-1][0] |= 1;
-                cellStack.push([cX-1, cY]);
+                maze[cY][cX][1] = maze[cY][cX-1][1] + 1;
             } else if (borders[dir] == 1) {
-                maze[cY][cX+1][1] = depth+1;
                 maze[cY][cX][0] |= 1;
-                cellStack.push([cX+1, cY]);
+                maze[cY][cX][1] = maze[cY][cX+1][1] + 1;
             } else if (borders[dir] == 2) {
-                maze[cY-1][cX][1] = depth+1;
                 maze[cY-1][cX][0] |= 2;
-                cellStack.push([cX, cY-1]);
+                maze[cY][cX][1] = maze[cY-1][cX][1] + 1;
             } else if (borders[dir] == 3) {
-                maze[cY+1][cX][1] = depth+1;
                 maze[cY][cX][0] |= 2;
-                cellStack.push([cX, cY+1]);
+                maze[cY][cX][1] = maze[cY+1][cX][1] + 1;
             }
         }
         sleepCounter++;
