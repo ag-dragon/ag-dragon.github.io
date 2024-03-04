@@ -28,7 +28,7 @@ function draw(maze) {
         for (x = 0; x < row.length; x++) {
             if (row[x][1] > 0) {
                 ctx.fillStyle = `hsl(
-                    ${Math.floor(row[x][1]/5 % 300)}
+                    ${Math.floor(row[x][1]/5 % 360)}
                     100%
                     70%)`;
                 ctx.fillRect((x * (cellSize + cellSpacing)) + cellSpacing, (y * (cellSize + cellSpacing)) + cellSpacing, cellSize, cellSize);
