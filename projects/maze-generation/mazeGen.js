@@ -15,7 +15,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function draw(maze) {
+function draw(maze) {
     const ctx = canvas.getContext("2d");
 
     ctx.fillStyle = "black";
@@ -106,14 +106,12 @@ async function depthFirst() {
                 cellStack.push([cX, cY+1]);
             }
         }
-        /*
         sleepCounter++;
         if (sleepCounter >= cellsPerDelay) {
             await sleep(delay);
             sleepCounter = 0;
         }
-        */
-        //draw(maze);
+        draw(maze);
     }
 }
 
@@ -197,24 +195,18 @@ async function prim() {
                 maze[cY][cX][1] = maze[cY+1][cX][1] + 1;
             }
         }
-        /*
         sleepCounter++;
         if (sleepCounter >= cellsPerDelay) {
             await sleep(delay);
             sleepCounter = 0;
         }
-        */
-        //draw(maze);
+        draw(maze);
     }
 }
 
 async function generateMaze() {
-    var promise = null;
     while (true) {
         if (restart) {
-            if (promise) {
-                await promise;
-            }
             cellSize = parseInt(cellSizeInput.value);
             cellSpacing = cellSize;
             cellWidth = (canvas.width - cellSpacing) / (cellSize + cellSpacing);
@@ -223,9 +215,9 @@ async function generateMaze() {
             cellsPerDelay = parseInt(cellsPerDelayInput.value);
             delay = parseInt(delayInput.value);
             if (algorithmSelect.value == "depthFirst") {
-                promise = depthFirst();
+                await depthFirst();
             } else if (algorithmSelect.value == "prim") {
-                promise = prim();
+                await prim();
             }
         }
         await sleep(1);
