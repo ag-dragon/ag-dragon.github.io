@@ -5,6 +5,7 @@
         <meta charset="UTF-8" />
         <title>Personal Site</title>
         <link rel="stylesheet" href="style.css" />
+        <script src="projects/maze-generation/mazeGen.js" defer></script>
     </head>
     <body>
         <div class="header">
@@ -32,7 +33,19 @@
             <a href="./projects">here</a>.
         </p>
 
-        <p><em>maze generation goes here?</em></p>
+        <canvas id="mazeCanvas" width="900" height="300">
+            Maze Generator
+        </canvas>
+        <div id="mazeControls" hidden>
+            <button id="generateButton" hidden>Generate</button>
+            <select id="algorithmSelect" hidden>
+                <option value="depthFirst" selected="selected" hidden>Depth-First</option>
+                <option value="prim">Prim's Algorithm</option hidden>
+            </select>
+            <input id="sizeInput" type="number" min="1" max="20" value="4" hidden />
+            <input id="cellsPerDelayInput" type="number" min="1" max="50" value="5" hidden />
+            <input id="delayInput" type="number" min="1" max="20" value="1" hidden />
+        </div>
         
         <p>
             Contact me at <span class="email">hgschultz@proton.me</span>.
